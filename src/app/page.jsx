@@ -5,7 +5,7 @@ import './globals.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Map3D = dynamic(() => import('./(components)/map3d'), { ssr: false });
+// const Map3D = dynamic(() => import('./(components)/map3d'), { ssr: false });
 
 const headers = {
   'Content-Type': 'application/json',
@@ -18,9 +18,7 @@ const instance = axios.create({
 });
 
 export default function Home() {
-  const [data, setData] = useState([]); // Menyimpan data yang didapat
-  const [loading, setLoading] = useState(true); // Menyimpan status loading
-  const [error, setError] = useState(null); // Menyimpan error jika ada
+  const [data, setData] = useState([]);
 
   // Mengambil data saat komponen dimuat
   useEffect(() => {
@@ -28,10 +26,8 @@ export default function Home() {
       try {
         const response = await instance.get('/api/location');
         setData(response.data?.data);
-        setLoading(false);
       } catch (err) {
-        setError('Gagal mengambil data'); // Menangani error
-        setLoading(false);
+        console.log(err);
       }
     };
 
@@ -40,7 +36,8 @@ export default function Home() {
 
   return (
     <div>
-      <Map3D data={data} />
+      <h1>aaa</h1>
+      {/* <Map3D data={data} /> */}
       <ToastNotify />
     </div>
   );
