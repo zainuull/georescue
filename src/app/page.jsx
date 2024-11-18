@@ -5,7 +5,7 @@ import './globals.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// const Map3D = dynamic(() => import('./(components)/map3d'), { ssr: false });
+const Map3D = dynamic(() => import('./(components)/map3d'), { ssr: false });
 
 const headers = {
   'Content-Type': 'application/json',
@@ -36,8 +36,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>aaa</h1>
-      {/* <Map3D data={data} /> */}
+      <Map3D data={data} />
       <ToastNotify />
     </div>
   );
