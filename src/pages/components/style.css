@@ -1,0 +1,554 @@
+/* Style the entire popup */
+.mapboxgl-popup {
+  max-width: 300px; /* Set the maximum width of the popup */
+  opacity: 0.95; /* Slight transparency */
+}
+
+/* Style the popup content */
+.mapboxgl-popup-content {
+  background-color: #333; /* Dark background color */
+  color: white; /* White text color */
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px; /* Internal padding */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+/* Customize the close button */
+.mapboxgl-popup-close-button {
+  color: white; /* White close button color */
+  font-size: 16px; /* Close button size */
+}
+
+/* Style the popup arrow (tip) */
+.mapboxgl-popup-tip {
+  border-bottom-color: #333; /* Match the background color */
+}
+
+/* CSS file */
+.map-menu {
+  transition: all 0.3s ease-in-out;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0px;
+  position: absolute;
+  width: 46px; /* Default width when collapsed */
+  left: 0; /* Default left position when collapsed */
+}
+
+.map-menu-right {
+  transition: all 0.3s ease-in-out;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0px;
+  position: absolute;
+  width: 46px; /* Default width when collapsed */
+  right: 0; /* Default left position when collapsed */
+}
+
+.custom-overview-map {
+  bottom: 50px; /* Position above the scale bar */
+  right: 10px; /* Align with the left side */
+  position: absolute;
+  width: 155px;
+  height: 155px;
+  border: 2px solid white; /* White border for contrast */
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  z-index: 1000; /* Ensure it appears above other elements */
+  overflow: hidden; /* Prevent content overflow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition effects */
+}
+
+.custom-overview-map:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+.custom-overview-map .ol-overviewmap-box {
+  border: 2px solid rgba(255, 69, 0, 0.8); /* Highlight the extent box with a vibrant color */
+  background: rgba(255, 69, 0, 0.2); /* Semi-transparent background for the extent box */
+}
+
+/* CSS untuk kontrol kompas */
+.ol-compass {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1000;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Styling untuk ikon kompas */
+.ol-compass i {
+  margin: 10px;
+  font-size: 36px;
+  color: #fff;
+  display: block;
+}
+
+/* Label arah */
+.ol-compass .direction-label {
+  position: absolute;
+  font-size: 14px;
+  color: #ffff;
+  font-weight: bold;
+}
+
+/* Label Utara, Selatan, Timur, Barat */
+.ol-compass .direction-label.north {
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ol-compass .direction-label.south {
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ol-compass .direction-label.east {
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ol-compass .direction-label.west {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Container for the coordinates */
+.coordinates-container {
+  width: 90%; /* Flexible width */
+  max-width: 500px; /* Maximum width */
+  position: absolute;
+  bottom: 15px; /* Distance from the bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  padding: 10px; /* Padding for comfortable spacing */
+  border-radius: 5px; /* Rounded corners */
+  color: white; /* White text color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  z-index: 1000; /* Ensures it stays on top */
+  display: block;
+}
+
+.coordinates-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.coordinates-text {
+  margin: 0;
+  font-size: 12px;
+}
+
+.ol-popup-satupeta {
+  position: absolute;
+  background-color: #f9fafb;
+  color: black; /* Ensure text is readable */
+  padding: 15px 20px !important;
+  border-radius: 8px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+  min-width: 370px; /* Set min width */
+  max-height: 400px; /* Set max height */
+  overflow: hidden; /* Prevent horizontal scrolling on the popup */
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid #ddd;
+  box-sizing: border-box; /* Include padding and border in width/height */
+}
+
+.ol-popup-satupeta-content {
+  word-wrap: break-word; /* Allow long words to break */
+  overflow-wrap: break-word; /* Fallback for older browsers */
+  max-height: 300px; /* Limit height of content */
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding-right: 1px; /* Add padding for scrollbar */
+  /* Ensure vertical scrolling works */
+  display: flex; /* Flexbox for correct content flow */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.ol-tooltip {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  border: 1px solid #cccccc;
+}
+
+.ol-tooltip-measure {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.ol-tooltip-static {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: 1px solid #cccccc;
+  font-weight: normal;
+}
+
+.measure-tool-close-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 10px;
+  border-radius: 4px;
+  width: auto;
+  height: auto;
+  text-align: center;
+  line-height: 1;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  margin-left: 10px;
+  z-index: 99999;
+}
+
+.measure-tool-close-button:hover {
+  background-color: #e60000; /* Darker red for hover effect */
+}
+
+.measure-tool-close-button:focus {
+  outline: none; /* Remove default outline on focus */
+}
+
+.zoom-button {
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.zoom-button i {
+  font-size: 18px; /* Icon size */
+  margin-right: 8px; /* Space between icon and text */
+}
+
+.zoom-button p {
+  margin: 0; /* Remove default margin */
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .map-menu,
+  .map-menu-right {
+    width: 90vw;
+  }
+
+  .map-menu {
+    left: -78vw; /* Left position when collapsed */
+  }
+
+  .map-menu.expanded,
+  .map-menu-right.expanded {
+    width: 90vw;
+  }
+
+  .map-menu.collapsed,
+  .map-menu-right.collapsed {
+    width: 46px;
+    left: 0;
+    right: 0;
+  }
+
+  .custom-overview-map {
+    width: 100px;
+    height: 100px;
+  }
+
+  .ol-compass {
+    bottom: 40px;
+    width: 80px;
+    height: 80px;
+    display: none;
+  }
+
+  .ol-compass i {
+    font-size: 14px;
+  }
+
+  .coordinates-container {
+    max-width: 180px;
+    bottom: 50px;
+    display: none;
+  }
+
+  .coordinates-text {
+    font-size: 7px;
+  }
+
+  .ol-popup-satupeta {
+    min-width: 240px;
+    max-height: 250px;
+    padding: 8px !important;
+    font-size: 10px;
+  }
+
+  .measure-tool-close-button,
+  .zoom-button {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1119px) {
+  .map-menu,
+  .map-menu-right {
+    width: 50vw;
+  }
+
+  .map-menu {
+    left: -40vw;
+  }
+
+  .map-menu.expanded {
+    width: 45vw;
+  }
+
+  .map-menu.collapsed,
+  .map-menu-right.collapsed {
+    width: 46px;
+    left: 0;
+    right: 0;
+  }
+
+  .map-menu-right {
+    right: -40vw;
+  }
+
+  .map-menu-right.expanded {
+    width: 50vw;
+  }
+}
+
+/* Small desktop styles */
+@media (min-width: 1120px) and (max-width: 1439px) {
+  .map-menu,
+  .map-menu-right {
+    width: 40vw;
+  }
+
+  .map-menu {
+    left: -30vw;
+  }
+
+  .map-menu.expanded {
+    width: 34vw;
+  }
+
+  .map-menu.collapsed,
+  .map-menu-right.collapsed {
+    width: 46px;
+    left: 0;
+    right: 0;
+  }
+
+  .map-menu-right {
+    right: -30vw;
+  }
+
+  .map-menu-right.expanded {
+    width: 40vw;
+  }
+}
+
+/* Large desktop / monitor styles */
+@media (min-width: 1440px) {
+  .map-menu,
+  .map-menu-right {
+    width: 30vw;
+  }
+
+  .map-menu {
+    left: -27vw;
+  }
+
+  .map-menu.expanded {
+    width: 30vw;
+  }
+
+  .map-menu.collapsed,
+  .map-menu-right.collapsed {
+    width: 46px;
+    left: 0;
+    right: 0;
+  }
+
+  .map-menu-right {
+    right: -30vw;
+  }
+
+  .map-menu-right.expanded {
+    width: 30vw;
+  }
+}
+
+/* styles.css */
+.map-accordion-container {
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.map-accordion-open {
+  width: 100% !important; /* Make it take full width when open */
+}
+
+.map-accordion-closed {
+  width: 50px; /* Small width when closed */
+}
+
+.map-accordion-bg {
+  transition: background-color 0.3s ease;
+}
+
+.map-accordion-bg-open {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.map-accordion-bg-closed {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.legenda-container {
+  position: absolute;
+  width: 25%;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: max-height 0.3s ease-out;
+  overflow: hidden;
+  max-height: 45px;
+}
+
+.legenda-container.open {
+  max-height: 400px;
+}
+
+.legenda-content {
+  padding: 2px;
+  overflow-y: auto;
+  min-height: 300px;
+  background-color: rgba(226, 232, 240, 0.48);
+}
+
+.legenda-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.legenda-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+@keyframes dot-ellipsis {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '..';
+  }
+  75% {
+    content: '...';
+  }
+  100% {
+    content: '';
+  }
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dot-ellipsis 1.5s steps(4, end) infinite;
+}
+
+@media (max-width: 768px) {
+  .position-absolute {
+    width: 40px; /* Adjust width for smaller screens */
+  }
+
+  .position-absolute p {
+    font-size: 0.8rem; /* Adjust font size */
+  }
+
+  .fs-2 {
+    font-size: 1.5rem; /* Adjust icon size */
+  }
+}
+
+.boxicon {
+  font-family: 'Boxicons'; /* Pastikan Anda telah memuat font BoxIcons */
+  font-size: 24px; /* Atur ukuran ikon sesuai kebutuhan */
+  color: yellow; /* Atur warna default ikon */
+}
+
+.boxicon:hover {
+  color: red; /* Atur warna ikon saat hover */
+}
+
+.offcanvas-header .btn-close {
+  color: white;
+}
+
+.btn.btn-detail {
+  color: white;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+.btn.btn-detail:hover {
+  color: #ffc107;
+  transform: scale(1.05);
+  transition: transform 0.5s ease 0.05s;
+  display: inline-block;
+}
+
+.wppn {
+  position: absolute;
+  left: -20px;
+  font-size: 12px;
+  color: #fff;
+  width: 300px;
+}
+
+.menu:hover {
+  background-color: #0056a5;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.tooltip-active {
+  background-color: #0056a5;
+  border-radius: 10%;
+}
