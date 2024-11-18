@@ -1,8 +1,8 @@
 'use client';
+import React, { useState } from 'react';
 import { GoUpload } from 'react-icons/go';
 import Image from 'next/image';
 import { CldUploadButton, CloudinaryUploadWidgetResults } from 'next-cloudinary';
-import React, { useState } from 'react';
 import { NotifyService } from '@/core/services/notify/notifyService';
 
 export const UploadImage = ({ setDataInput, dataInput }) => {

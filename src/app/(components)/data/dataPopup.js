@@ -1,3 +1,5 @@
+import React from 'react';
+
 const generateDynamicTable = (result, fields) => {
   if (!result) return '<div>Tidak ada data</div>';
 

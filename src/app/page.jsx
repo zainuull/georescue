@@ -5,7 +5,7 @@ import './globals.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Map3D = dynamic(() => import('../pages/components/map3d'), { ssr: false });
+const Map3D = dynamic(() => import('./(components)/map3d'), { ssr: false });
 
 const headers = {
   'Content-Type': 'application/json',

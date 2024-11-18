@@ -1,9 +1,9 @@
 'use client';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { UploadImage } from '../components/uploadImage';
+import { useState } from 'react';
 import '../../app/globals.css';
-import PopUp from '../components/PopUp';
+import { UploadImage } from '@/app/(components)/uploadImage';
+import PopUp from '@/app/(components)/PopUp';
 
 const headers = {
   'Content-Type': 'application/json',

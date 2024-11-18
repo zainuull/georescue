@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Modal from 'react-bootstrap/Modal';
 import MapboxMap from './MapboxMap';
 
 function PopUp(props) {
