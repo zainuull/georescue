@@ -1,8 +1,8 @@
-import outdoors from '../../../assets/satupeta/map/outdoors.png';
-import satelite from '../../../assets/satupeta/map/satelite.png';
-import basic from '../../../assets/satupeta/map/basic.png';
-import dark from '../../../assets/satupeta/map/dark.png';
-import light from '../../../assets/satupeta/map/light.png';
+import outdoors from '../../../../public/assets/satupeta/map/outdoors.png';
+import satelite from '../../../../public/assets/satupeta/map/satelite.png';
+import basic from '../../../../public/assets/satupeta/map/basic.png';
+import dark from '../../../../public/assets/satupeta/map/dark.png';
+import light from '../../../../public/assets/satupeta/map/light.png';
 
 export const initialMapSourcesMapbox = {
   outdoors: {
