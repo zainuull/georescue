@@ -1,7 +1,7 @@
 'use client';
 import axios from 'axios';
 import { useState } from 'react';
-import '../../app/globals.css';
+import '../../globals.css';
 import { UploadImage } from '@/app/(components)/uploadImage';
 import PopUp from '@/app/(components)/PopUp';
 
