@@ -44,7 +44,9 @@ function PopUp(props) {
           </div>
         </div>
       )}
-      <MapboxMap lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
+      <div className="relative">
+        <MapboxMap lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
+      </div>
     </div>
   );
 }

@@ -30,8 +30,6 @@ const Form = () => {
   const handleLacak = (e) => {
     e.preventDefault();
     setShow(true);
-    // setLat(Number(latitude));
-    // setLng(Number(longitude));
   };
 
   const handleSubmit = async (e) => {
@@ -45,9 +43,8 @@ const Form = () => {
 
     try {
       const res = await instance.post('/api/location', payload);
-      console.log('res', res);
       alert('Lokasi berhasil ditambahkan!');
-      setNama('');
+      window.location.reload();
     } catch (err) {
       console.log('err', err);
       alert('Gagal menambahkan lokasi.');

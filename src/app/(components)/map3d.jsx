@@ -151,7 +151,8 @@ const MapboxExample = ({ data }) => {
   const radiusRef = useRef(20); // Radius awal untuk animasi
   const radiusDirectionRef = useRef('increase'); // Menyimpan arah perubahan radius
   const pulseEffectRef = useRef(0); // Menyimpan efek pulse untuk animasi
-  const [pulseEffect, setPulseEffect] = useState(0);
+
+  console.log('data', data);
 
   // Init Map dan layer bangunan
   useEffect(() => {
@@ -350,18 +351,6 @@ const MapboxExample = ({ data }) => {
 
     // Listen for click events on the Mapbox GL map
     const onClickHandler = async (e) => {
-      const longitude = e.lngLat.lng;
-      const latitude = e.lngLat.lat;
-
-      const bufferDistance = 0.1; // Radius dalam derajat (misalnya, 0.1 derajat sekitar 10km)
-
-      const bbox = [
-        longitude - bufferDistance,
-        latitude - bufferDistance,
-        longitude + bufferDistance,
-        latitude + bufferDistance,
-      ];
-
       // Menyaring fitur dalam bounding box yang ditentukan
       const features = mapRef.current.queryRenderedFeatures(e.point, {
         layers: ['locations-layer'], // Nama layer yang digunakan untuk titik lokasi
@@ -371,7 +360,7 @@ const MapboxExample = ({ data }) => {
         const feature = features[0]; // Mengambil fitur pertama yang ditemukan
         const properties = feature.properties;
 
-        console.log('properties:', properties);
+        console.log('features:', features);
         showPopupWithContent(e.originalEvent, 'Provinsi_Indonesia', properties);
       } else {
         console.log('Tidak ada fitur yang ditemukan pada titik tersebut.');
