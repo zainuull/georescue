@@ -10,7 +10,7 @@ const poppins = Poppins({
 export const metadata = {
   title: 'GeoRescue',
   description: 'This created by Zainul',
-  authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app/' }],
+  authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app' }],
   icons: {
     icon: '/logo.jpeg',
   },
