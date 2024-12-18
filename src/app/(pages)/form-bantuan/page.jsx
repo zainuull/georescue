@@ -4,6 +4,7 @@ import { useState } from 'react';
 import '../../globals.css';
 import { UploadImage } from '@/app/(components)/uploadImage';
 import PopUp from '@/app/(components)/PopUp';
+import { useRouter } from 'next/router';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -25,6 +26,7 @@ const Form = () => {
   });
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
+  const router = useRouter();
 
   // Function to handle getting location from browser
   const handleLacak = (e) => {
@@ -44,7 +46,7 @@ const Form = () => {
     try {
       const res = await instance.post('/api/location', payload);
       alert('Lokasi berhasil ditambahkan!');
-      window.location.reload();
+      router.push('/');
     } catch (err) {
       console.log('err', err);
       alert('Gagal menambahkan lokasi.');

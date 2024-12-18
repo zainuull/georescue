@@ -36,7 +36,6 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Hello World</h1>
       <Map3D data={data} />
       <ToastNotify />
     </div>
