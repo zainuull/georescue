@@ -26,7 +26,6 @@ const Form = () => {
   });
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const router = useRouter();
 
   // Function to handle getting location from browser
   const handleLacak = (e) => {
