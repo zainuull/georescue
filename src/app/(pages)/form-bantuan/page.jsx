@@ -4,7 +4,7 @@ import { useState } from 'react';
 import '../../globals.css';
 import { UploadImage } from '@/app/(components)/uploadImage';
 import PopUp from '@/app/(components)/PopUp';
-import { useRouter } from 'next/router';
+import { redirect } from 'next/navigation';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const Form = () => {
     try {
       const res = await instance.post('/api/location', payload);
       alert('Lokasi berhasil ditambahkan!');
-      router.push('/');
+      redirect('/');
     } catch (err) {
       console.log('err', err);
       alert('Gagal menambahkan lokasi.');
