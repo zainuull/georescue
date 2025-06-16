@@ -160,33 +160,52 @@
   font-size: 12px;
 }
 
+.mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
+  display: none !important;
+}
+.mapboxgl-ctrl-fullscreen {
+  display: block !important;
+  visibility: visible !important;
+}
+
+#map {
+  touch-action: none; /* Mencegah browser mencegah gesture zoom */
+}
+
 .ol-popup-satupeta {
   position: absolute;
   background-color: #f9fafb;
-  color: black; /* Ensure text is readable */
+  color: black;
   padding: 15px 20px !important;
   border-radius: 8px;
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
-  min-width: 370px; /* Set min width */
-  max-height: 400px; /* Set max height */
-  overflow: hidden; /* Prevent horizontal scrolling on the popup */
+  min-width: 370px;
+  max-height: 400px;
+  overflow: hidden;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   line-height: 1.6;
   border: 1px solid #ddd;
-  box-sizing: border-box; /* Include padding and border in width/height */
+  box-sizing: border-box;
 }
 
 .ol-popup-satupeta-content {
-  word-wrap: break-word; /* Allow long words to break */
-  overflow-wrap: break-word; /* Fallback for older browsers */
-  max-height: 300px; /* Limit height of content */
-  overflow-y: auto; /* Allow vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  padding-right: 1px; /* Add padding for scrollbar */
-  /* Ensure vertical scrolling works */
-  display: flex; /* Flexbox for correct content flow */
-  flex-direction: column; /* Stack children vertically */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ol-popup-satupeta-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: contain;
 }
 
 .ol-tooltip {

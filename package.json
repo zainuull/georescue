@@ -11,9 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@mui/material": "^6.1.5",
     "@prisma/client": "^5.21.1",
     "@react-google-maps/api": "^2.20.3",
+    "@turf/boolean-point-in-polygon": "^7.2.0",
+    "@turf/helpers": "^7.2.0",
     "aframe": "^1.6.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
