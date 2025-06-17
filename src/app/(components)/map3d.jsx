@@ -11,8 +11,10 @@ import { dataPopup } from "./data/dataPopup";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import axios from "axios";
+import * as turf from "@turf/turf";
 import inside from "@turf/boolean-point-in-polygon";
 import { point } from "@turf/helpers";
+import distance from "@turf/distance";
 
 const token = process.env.NEXT_PUBLIC_TOKEN_MAPBOX || "";
 const indonesiaCoordinates = [117.54672551458364, -2.8251446211285893];
@@ -46,8 +48,7 @@ const MapboxExample = ({ data }) => {
   const radiusDirectionRef = useRef("increase"); // Menyimpan arah perubahan radius
   const pulseEffectRef = useRef(0); // Menyimpan efek pulse untuk animasi
   const markerRef = useRef(null);
-  let hospitalMarkerRef = null;
-
+  let hospitalMarkerRefs = [];
   // console.log("hospitals", hospitals);
 
   // Init Map dan layer bangunan
@@ -157,9 +158,13 @@ const MapboxExample = ({ data }) => {
     };
   }, [token, currentMap]);
 
-  const fetchHospitals = async () => {
+  const toUnderscoreLowercase = (str) =>
+    str?.toLowerCase().replace(/\s+/g, "_");
+
+  const fetchHospitals = async (province) => {
+    const provKey = toUnderscoreLowercase(province); // Contoh: "Jawa Barat" -> "jawa_barat"
     try {
-      const res = await axios.get("/hospitals/jabar.json");
+      const res = await axios.get(`/hospitals/${provKey}.json`);
       const hospitals = res.data.map((item) => ({
         name: item.name || "Rumah Sakit",
         coordinates: [item.lng, item.lat], // ⬅️ Sesuaikan
@@ -172,6 +177,33 @@ const MapboxExample = ({ data }) => {
       return [];
     }
   };
+
+  const reverseGeocodeMapbox = async (lat, lng) => {
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json`;
+
+    try {
+      const response = await axios.get(url, {
+        params: {
+          access_token: token,
+          limit: 1,
+          language: "id",
+        },
+      });
+
+      const placeName = response.data.features?.[0]?.place_name;
+      const features = response.data.features || [];
+
+      const region = features
+        .flatMap((f) => f.context || [])
+        .find((item) => item.id.startsWith("region"));
+
+      return region || "Lokasi tidak ditemukan";
+    } catch (error) {
+      console.error("Error saat reverse geocoding:", error.message);
+      return "Terjadi kesalahan saat mengambil lokasi";
+    }
+  };
+
   const fetchIsochrone = async (data) => {
     const token = mapboxgl.accessToken;
     const userCoords = [data.longitude, data.latitude];
@@ -235,39 +267,144 @@ const MapboxExample = ({ data }) => {
       // =========================
       // 🔍 Cari RS terdekat dalam isochrone
       // =========================
-      const hospitalList = await fetchHospitals(); // 🔥 ambil dari API lokal
 
-      let nearestHospital = null;
-      for (const contour of geojson.features) {
-        for (const hospital of hospitalList) {
-          const hospitalPoint = point(hospital.coordinates); // pastikan [lng, lat]
-          if (inside(hospitalPoint, contour)) {
-            nearestHospital = hospital;
-            break;
+      const location = await reverseGeocodeMapbox(
+        data.latitude,
+        data.longitude
+      );
+
+      if (location) {
+        const hospitalList = await fetchHospitals(location.text);
+        const nearestHospitals = [];
+        const userPoint = point(userCoords);
+
+        // Filter dan hitung jarak untuk RS dalam kontur
+        for (const contour of geojson.features) {
+          for (const hospital of hospitalList) {
+            const hospitalPoint = point(hospital.coordinates);
+            if (inside(hospitalPoint, contour)) {
+              const dist = distance(userPoint, hospitalPoint, {
+                units: "kilometers",
+              });
+              nearestHospitals.push({ ...hospital, distance: dist });
+            }
           }
         }
-        if (nearestHospital) break;
-      }
 
-      console.log("nearestHospital", nearestHospital);
+        // Urutkan berdasarkan jarak terdekat dan ambil 10 saja
+        const topHospitals = nearestHospitals
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 10);
 
-      if (nearestHospital) {
-        const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userCoords.join(
-          ","
-        )};${nearestHospital.coordinates.join(
-          ","
-        )}?geometries=geojson&access_token=${token}`;
+        if (topHospitals.length > 0) {
+          // Hapus layer & source sebelumnya
+          if (mapRef.current.getLayer("route-line")) {
+            mapRef.current.removeLayer("route-line");
+          }
+          if (mapRef.current.getSource("route")) {
+            mapRef.current.removeSource("route");
+          }
 
-        const routeRes = await axios.get(routeUrl);
-        const routeGeoJSON = {
-          type: "Feature",
-          geometry: routeRes.data.routes[0].geometry,
-        };
+          const features = [];
+          hospitalMarkerRefs.forEach((marker) => marker.remove());
+          hospitalMarkerRefs = [];
+          for (const hospital of topHospitals) {
+            const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userCoords.join(
+              ","
+            )};${hospital.coordinates.join(
+              ","
+            )}?geometries=geojson&access_token=${token}`;
 
-        // Tambahkan atau update layer rute
-        if (mapRef.current.getSource("route")) {
-          mapRef.current.getSource("route").setData(routeGeoJSON);
-        } else {
+            const routeRes = await axios.get(routeUrl);
+            const route = routeRes.data.routes[0];
+            const durationInMin = Math.round(route.duration / 60); // dalam menit
+            const distanceInKm = route.distance / 1000;
+
+            features.push({
+              type: "Feature",
+              geometry: route.geometry,
+              properties: {
+                name: hospital.name,
+                distance: distanceInKm,
+                duration: durationInMin,
+              },
+            });
+
+            const popup = new mapboxgl.Popup();
+
+            popup.setDOMContent(
+              (() => {
+                const popupDiv = document.createElement("div");
+                const buttonId = `btn-start-${hospital.name
+                  .replace(/\s/g, "-")
+                  .toLowerCase()}`;
+
+                popupDiv.innerHTML = `
+      <strong>${hospital.name}</strong><br/>
+      Jarak: ${distanceInKm.toFixed(2)} km<br/>
+      Estimasi waktu: ${durationInMin} menit<br/><br/>
+      <button
+        data-hospital='${JSON.stringify(hospital)}'
+        id="${buttonId}"
+        style="padding: 4px 8px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Mulai
+      </button>
+    `;
+
+                popupDiv.style.color = "black";
+                popupDiv.style.fontWeight = "bold";
+
+                return popupDiv;
+              })()
+            );
+
+            // Tambahkan event setelah popup dibuka
+            popup.on("open", () => {
+              const startButton = document.getElementById(
+                `btn-start-${hospital.name.replace(/\s/g, "-").toLowerCase()}`
+              );
+              if (startButton) {
+                startButton.addEventListener("click", () => {
+                  const hospitalData = JSON.parse(startButton.dataset.hospital);
+                  console.log("RS diklik:", hospitalData);
+
+                  // Ambil rute dari GeoJSON
+                  const selectedRoute = features.find(
+                    (f) => f.properties.name === hospitalData.name
+                  );
+                  console.log("selectedRoute", selectedRoute);
+                  if (selectedRoute) {
+                    simulateTrip(selectedRoute.geometry.coordinates);
+                  }
+                });
+              }
+            });
+
+            // Tambahkan popup ke marker
+            const marker = new mapboxgl.Marker({
+              element: (() => {
+                const el = document.createElement("div");
+                el.innerHTML = "🏥";
+                el.style.fontSize = "24px";
+                el.style.cursor = "pointer";
+                return el;
+              })(),
+            })
+              .setLngLat(hospital.coordinates)
+              .setPopup(popup)
+              .addTo(mapRef.current);
+
+            // Simpan referensi untuk dihapus nanti
+            hospitalMarkerRefs.push(marker);
+          }
+
+          // Gabungkan semua rute ke GeoJSON
+          const routeGeoJSON = {
+            type: "FeatureCollection",
+            features,
+          };
+
+          // Tambahkan source dan layer garis
           mapRef.current.addSource("route", {
             type: "geojson",
             data: routeGeoJSON,
@@ -286,42 +423,9 @@ const MapboxExample = ({ data }) => {
               "line-width": 4,
             },
           });
+        } else {
+          console.warn("❗ Tidak ada RS dalam radius isochrone.");
         }
-
-        // Tambah marker RS
-        // Hapus marker RS sebelumnya jika ada
-        if (hospitalMarkerRef) {
-          hospitalMarkerRef.remove();
-        }
-
-        // Tambah marker RS baru
-        const newHospitalMarker = new mapboxgl.Marker({
-          element: (() => {
-            const el = document.createElement("div");
-            el.innerHTML = "🏥";
-            el.style.fontSize = "24px";
-            el.style.cursor = "pointer";
-            return el;
-          })(),
-        })
-          .setLngLat(nearestHospital.coordinates)
-          .setPopup(
-            new mapboxgl.Popup().setDOMContent(
-              (() => {
-                const popupDiv = document.createElement("div");
-                popupDiv.textContent = `RS Terdekat: ${nearestHospital.name}`;
-                popupDiv.style.color = "black";
-                popupDiv.style.fontWeight = "bold";
-                return popupDiv;
-              })()
-            )
-          )
-          .addTo(mapRef.current);
-
-        // Simpan referensinya
-        hospitalMarkerRef = newHospitalMarker;
-      } else {
-        console.warn("❗ Tidak ada RS dalam radius isochrone.");
       }
     } catch (err) {
       console.error("Gagal mengambil isochrone:", err);
@@ -887,6 +991,75 @@ const MapboxExample = ({ data }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  function interpolatePos(from, to, t) {
+    const lng = from[0] + (to[0] - from[0]) * t;
+    const lat = from[1] + (to[1] - from[1]) * t;
+    return [lng, lat];
+  }
+
+  function simulateTrip(routeCoords, duration = 100000) {
+    const map = mapRef.current;
+    if (!map || !routeCoords || routeCoords.length < 2) return;
+
+    let startTime = null;
+    const totalSegments = routeCoords.length - 1;
+    const segmentDuration = duration / totalSegments;
+
+    const carEl = document.createElement("div");
+    carEl.innerHTML = "🚗";
+    carEl.style.fontSize = "24px";
+
+    const carMarker = new mapboxgl.Marker(carEl)
+      .setLngLat(routeCoords[0])
+      .addTo(map);
+
+    // Auto zoom dan center ke awal posisi
+    map.flyTo({
+      center: routeCoords[0],
+      zoom: 19.5,
+      pitch: 70,
+      bearing: 0,
+      speed: 1.4,
+      curve: 1.5,
+      essential: true,
+    });
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
+      let currentSegment = Math.floor(elapsed / segmentDuration);
+      let t = (elapsed % segmentDuration) / segmentDuration;
+
+      if (currentSegment >= totalSegments) {
+        carMarker.setLngLat(routeCoords[routeCoords.length - 1]);
+        alert("🚗 Perjalanan selesai!");
+        return;
+      }
+
+      const from = routeCoords[currentSegment];
+      const to = routeCoords[currentSegment + 1];
+      const pos = interpolatePos(from, to, t);
+
+      carMarker.setLngLat(pos);
+
+      const bearing = turf.bearing(turf.point(from), turf.point(to));
+
+      map.easeTo({
+        center: pos,
+        zoom: 19.5,
+        pitch: 70,
+        bearing: bearing,
+        duration: 80,
+        easing: (t) => t * t * (3 - 2 * t),
+      });
+
+      requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
 
   return (
     <div className="relative overflow-hidden">

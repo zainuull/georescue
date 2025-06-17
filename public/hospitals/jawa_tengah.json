@@ -1,0 +1,62 @@
+[
+  {
+    "name": "RS Dummy 1",
+    "type": "B",
+    "lat": -7.542317,
+    "lng": 110.787585
+  },
+  {
+    "name": "RS Dummy 2",
+    "type": "C",
+    "lat": -7.542421,
+    "lng": 110.787392
+  },
+  {
+    "name": "RS Dummy 3",
+    "type": "B",
+    "lat": -7.542485,
+    "lng": 110.787604
+  },
+  {
+    "name": "RS Dummy 4",
+    "type": "A",
+    "lat": -7.54237,
+    "lng": 110.787473
+  },
+  {
+    "name": "RS Dummy 5",
+    "type": "C",
+    "lat": -7.54245,
+    "lng": 110.78753
+  },
+  {
+    "name": "RS Dummy 6",
+    "type": "B",
+    "lat": -7.542382,
+    "lng": 110.78762
+  },
+  {
+    "name": "RS Dummy 7",
+    "type": "B",
+    "lat": -7.542312,
+    "lng": 110.78749
+  },
+  {
+    "name": "RS Dummy 8",
+    "type": "C",
+    "lat": -7.54253,
+    "lng": 110.78741
+  },
+  {
+    "name": "RS Dummy 9",
+    "type": "A",
+    "lat": -7.542395,
+    "lng": 110.78756
+  },
+  {
+    "name": "RS Dummy 10",
+    "type": "B",
+    "lat": -7.54246,
+    "lng": 110.787445
+  }
+]
