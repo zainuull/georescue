@@ -151,12 +151,29 @@ const MapboxExample = ({ data }) => {
       fetchHospitals();
     });
 
+
+    let lastZoom = mapRef.current.getZoom();
+
+    mapRef.current.on("zoomend", () => {
+      const zoom = mapRef.current.getZoom();
+
+      if (zoom !== lastZoom) {
+        // Pitch menyesuaikan dengan zoom, tetapi lebih halus
+        const newPitch = Math.max(zoom * 3, 0); // Batas minimum pitch 0
+        mapRef.current.easeTo({ pitch: newPitch, duration: 500 });
+
+        lastZoom = zoom;
+      }
+    });
+
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
       }
     };
   }, [token, currentMap]);
+
+ 
 
   const toUnderscoreLowercase = (str) =>
     str?.toLowerCase().replace(/\s+/g, "_");
@@ -374,7 +391,8 @@ const MapboxExample = ({ data }) => {
                   );
                   console.log("selectedRoute", selectedRoute);
                   if (selectedRoute) {
-                    simulateTrip(selectedRoute.geometry.coordinates);
+                    // simulateTrip(selectedRoute.geometry.coordinates);
+                    animateSmooth(selectedRoute.geometry.coordinates);
                   }
                 });
               }
@@ -691,31 +709,6 @@ const MapboxExample = ({ data }) => {
     map.on("click", onClickHandler);
   }, [data, mapRef.current]);
 
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    map.on("load", () => {
-      // Tambahkan NavigationControl hanya jika belum ada
-      if (
-        !document.querySelector(".mapboxgl-ctrl-top-right .mapboxgl-ctrl-group")
-      ) {
-        const nav = new mapboxgl.NavigationControl();
-        map.addControl(nav, "top-right");
-
-        // Tambahkan margin-top setelah kontrol ditambahkan
-        setTimeout(() => {
-          const controls = document.querySelector(".mapboxgl-ctrl-top-right");
-          if (controls) {
-            controls.style.marginTop = "75px";
-          }
-        }, 0);
-      }
-
-      map.addControl(new mapboxgl.FullscreenControl(), "bottom-left");
-    });
-  }, [mapRef.current]);
-
   const generatePopupContent = (id, result) => {
     let content = "";
 
@@ -843,42 +836,42 @@ const MapboxExample = ({ data }) => {
   };
 
   // Zoom Pitch
-  useEffect(() => {
-    if (!mapRef.current) {
-      console.log("Map is not initialized yet");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!mapRef.current) {
+  //     console.log("Map is not initialized yet");
+  //     return;
+  //   }
 
-    const ZoomPitch = () => {
-      if (isZoomingWithPopup) {
-        return;
-      }
+  //   const ZoomPitch = () => {
+  //     if (isZoomingWithPopup) {
+  //       return;
+  //     }
 
-      const zoomLevel = mapRef.current.getZoom();
-      let targetPitch = 0;
+  //     const zoomLevel = mapRef.current.getZoom();
+  //     let targetPitch = 0;
 
-      if (zoomLevel >= 5.8 && zoomLevel <= 10) {
-        targetPitch = (zoomLevel - 8) * 22.5;
-      } else if (zoomLevel > 10) {
-        const pitchIncrement = (zoomLevel - 10) * 7.5;
-        targetPitch = Math.min(45 + pitchIncrement, 60);
-      }
+  //     if (zoomLevel >= 5.8 && zoomLevel <= 10) {
+  //       targetPitch = (zoomLevel - 8) * 22.5;
+  //     } else if (zoomLevel > 10) {
+  //       const pitchIncrement = (zoomLevel - 10) * 7.5;
+  //       targetPitch = Math.min(45 + pitchIncrement, 60);
+  //     }
 
-      const currentMapPitch = mapRef.current.getPitch();
-      if (targetPitch !== currentMapPitch) {
-        mapRef.current.setPitch(targetPitch);
-      }
-    };
+  //     const currentMapPitch = mapRef.current.getPitch();
+  //     if (targetPitch !== currentMapPitch) {
+  //       mapRef.current.setPitch(targetPitch);
+  //     }
+  //   };
 
-    mapRef.current.on("zoom", ZoomPitch); // Mendaftarkan event zoom
+  //   mapRef.current.on("zoom", ZoomPitch); // Mendaftarkan event zoom
 
-    // Hapus event listener saat komponen dibersihkan
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.off("zoom", ZoomPitch);
-      }
-    };
-  }, [mapRef.current, isZoomingWithPopup]);
+  //   // Hapus event listener saat komponen dibersihkan
+  //   return () => {
+  //     if (mapRef.current) {
+  //       mapRef.current.off("zoom", ZoomPitch);
+  //     }
+  //   };
+  // }, [mapRef.current, isZoomingWithPopup]);
 
   // For change basemap
   useEffect(() => {
@@ -997,6 +990,79 @@ const MapboxExample = ({ data }) => {
     const lat = from[1] + (to[1] - from[1]) * t;
     return [lng, lat];
   }
+
+  let animationMarker = null;
+  let animationId = null;
+
+  const animateSmooth = (route, duration = 100000) => {
+    const map = mapRef.current;
+    if (!map || !route || route.length < 2) return;
+
+    if (animationMarker) {
+      animationMarker.remove();
+      animationMarker = null;
+    }
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+
+    animationMarker = new mapboxgl.Marker({ color: "#1DB954" })
+      .setLngLat(route[0])
+      .addTo(map);
+
+    // Posisi kamera awal
+    map.flyTo({
+      center: route[0],
+      zoom: 19.5,
+      pitch: 70,
+      bearing: 0,
+      speed: 1.4,
+      curve: 1.5,
+      essential: true,
+    });
+
+    let startTime = null;
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
+      const totalSegments = route.length - 1;
+      const segmentDuration = duration / totalSegments;
+
+      let currentSegment = Math.floor(elapsed / segmentDuration);
+      let t = (elapsed % segmentDuration) / segmentDuration;
+
+      if (currentSegment >= totalSegments) {
+        animationMarker.setLngLat(route[route.length - 1]);
+        return;
+      }
+
+      const from = route[currentSegment];
+      const to = route[currentSegment + 1];
+      const pos = interpolatePos(from, to, t);
+
+      animationMarker.setLngLat(pos);
+
+      // Hitung arah gerak
+      const bearing = turf.bearing(turf.point(from), turf.point(to));
+
+      // Kamera mengikuti dengan smooth easing dan durasi pendek
+      map.easeTo({
+        center: pos,
+        zoom: 19.5,
+        pitch: 70,
+        bearing: bearing,
+        duration: 80, // Lebih pendek = lebih responsif
+        easing: (t) => t * t * (3 - 2 * t), // Smooth easing cubic
+      });
+
+      animationId = requestAnimationFrame(step);
+    };
+
+    animationId = requestAnimationFrame(step);
+  };
 
   function simulateTrip(routeCoords, duration = 100000) {
     const map = mapRef.current;
