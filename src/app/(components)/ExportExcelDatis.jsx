@@ -184,4 +184,6 @@ const ExportExcelDatis = forwardRef((props, ref) => {
   );
 });
 
+
+ExportExcelDatis.displayName = 'ExportExcelDatis';
 export default ExportExcelDatis;
