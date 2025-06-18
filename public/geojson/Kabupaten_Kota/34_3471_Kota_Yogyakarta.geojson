@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              110.39712688600008,
+              -7.788483850999967,
+              0.0
+            ],
+            [
+              110.40356599900008,
+              -7.833092601999965,
+              0.0
+            ],
+            [
+              110.35175258000004,
+              -7.825745171999927,
+              0.0
+            ],
+            [
+              110.35223006400008,
+              -7.766489707999938,
+              0.0
+            ],
+            [
+              110.39712688600008,
+              -7.788483850999967,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "NAMOBJ": "Kota Yogyakarta",
+        "KDPKAB": "3471",
+        "KDPPUM": "34",
+        "LUASWH": 32.8190625255,
+        "TIPADM": 5,
+        "WADMKK": "Kota Yogyakarta",
+        "WADMPR": "Daerah Istimewa Yogyakarta",
+        "Longitude": 110.374655742,
+        "Latitude": -7.80328387564
+      }
+    }
+  ]
+}

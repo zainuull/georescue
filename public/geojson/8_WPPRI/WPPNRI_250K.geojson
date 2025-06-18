@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"name": "WPPNRI_250K",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Id": 12, "WPPNRI": "Laut Lepas" }, "geometry": { "type": "Point", "coordinates": [ 85.23598862920063, -10.8027853493329027  ] } },
+{ "type": "Feature", "properties": { "Id": 1, "WPPNRI": "WPP-RI 571" }, "geometry": { "type": "Point", "coordinates": [ 93.9285564150461, 10.685691650276867  ] } },
+{ "type": "Feature", "properties": { "Id": 2, "WPPNRI": "WPP-RI 572" }, "geometry": { "type": "Point", "coordinates": [ 85.23598862920063, 0.8027853493329027  ] } },
+{ "type": "Feature", "properties": { "Id": 3, "WPPNRI": "WPP-RI 573" }, "geometry": { "type": "Point", "coordinates": [ 108.529854576234, -9.242990711313867] } },
+{ "type": "Feature", "properties": { "Id": 4, "WPPNRI": "WPP-RI 711" }, "geometry": { "type": "Point", "coordinates": [ 106.57808675114687, 8.674603387577205 ] } },
+{ "type": "Feature", "properties": { "Id": 5, "WPPNRI": "WPP-RI 712" }, "geometry": { "type": "Point", "coordinates": [  101.57110647252037, -3.4525865803492195 ] } },
+{ "type": "Feature", "properties": { "Id": 6, "WPPNRI": "WPP-RI 713" }, "geometry": { "type": "Point", "coordinates": [ 117.1572325936585, -3.667510459616972  ] } },
+{ "type": "Feature", "properties": { "Id": 7, "WPPNRI": "WPP-RI 714" }, "geometry": { "type": "Point", "coordinates": [ 125.76265118579312, -10.60167054849584 ] } },
+{ "type": "Feature", "properties": { "Id": 8, "WPPNRI": "WPP-RI 715" }, "geometry": { "type": "Point", "coordinates": [ 128.59778726285262, 2.493439392221181 ] } },
+{ "type": "Feature", "properties": { "Id": 9, "WPPNRI": "WPP-RI 716" }, "geometry": { "type": "Point", "coordinates": [ 121.30186982339332, 9.748685743908364  ] } },
+{ "type": "Feature", "properties": { "Id": 10, "WPPNRI": "WPP-RI 717" }, "geometry": { "type": "Point", "coordinates": [ 135.82162641886381, 9.61460654007038 ] } },
+{ "type": "Feature", "properties": { "Id": 11, "WPPNRI": "WPP-RI 718" }, "geometry": { "type": "Point", "coordinates": [ 135.72567856174615, -3.684049929637252 ] } }
+]
+}

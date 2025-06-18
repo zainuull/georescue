@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              124.46958613700008,
+              0.7624279700000329,
+              0.0
+            ],
+            [
+              124.46546623400002,
+              0.7325630670000578,
+              0.0
+            ],
+            [
+              124.46041384500006,
+              0.7306673160000514,
+              0.0
+            ],
+            [
+              124.45299660900002,
+              0.7719871260000559,
+              0.0
+            ],
+            [
+              124.46958613700008,
+              0.7624279700000329,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "NAMOBJ": "Minahasa Selatan/Bolaang Mongondwo Timur",
+        "KDPKAB": "7105/7110",
+        "KDPPUM": "71",
+        "LUASWH": 6.52813214645,
+        "TIPADM": 999,
+        "WADMKK": "Minahasa Selatan/Bolaang Mongondwo Timur",
+        "WADMPR": "Sulawesi Utara",
+        "Longitude": 124.461463886,
+        "Latitude": 0.753387192916
+      }
+    }
+  ]
+}

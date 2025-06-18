@@ -1,0 +1,62 @@
+.ol-popup {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  padding: 16px 20px;
+  min-width: 240px;
+  max-width: 320px;
+  font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+  font-size: 14px;
+  color: #111827;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.ol-popup-content {
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.6;
+}
+
+.ol-popup h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ol-popup p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.ol-popup-closer {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 18px;
+  text-decoration: none;
+  color: #9ca3af;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out;
+}
+
+.ol-popup-closer:hover {
+  color: #ef4444;
+}
+
+.hover-popup {
+  z-index: 1000;
+}
+
+.click-popup {
+  z-index: 1100; /* lebih tinggi agar menimpa hover */
+}
+
+.map-container {
+  width: 1200px;
+  height: 800px;
+}

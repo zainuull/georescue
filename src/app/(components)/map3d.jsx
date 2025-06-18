@@ -15,6 +15,8 @@ import * as turf from "@turf/turf";
 import inside from "@turf/boolean-point-in-polygon";
 import { point } from "@turf/helpers";
 import distance from "@turf/distance";
+import SidebarContent from "./sidebar.content";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 const token = process.env.NEXT_PUBLIC_TOKEN_MAPBOX || "";
 const indonesiaCoordinates = [117.54672551458364, -2.8251446211285893];
@@ -49,6 +51,9 @@ const MapboxExample = ({ data }) => {
   const pulseEffectRef = useRef(0); // Menyimpan efek pulse untuk animasi
   const markerRef = useRef(null);
   let hospitalMarkerRefs = [];
+  const [sidebar_content, setSidebar_content] = useState(false);
+  const [dataProvince, setProvinceSelect] = useState(null);
+
   // console.log("hospitals", hospitals);
 
   // Init Map dan layer bangunan
@@ -151,7 +156,6 @@ const MapboxExample = ({ data }) => {
       fetchHospitals();
     });
 
-
     let lastZoom = mapRef.current.getZoom();
 
     mapRef.current.on("zoomend", () => {
@@ -172,8 +176,6 @@ const MapboxExample = ({ data }) => {
       }
     };
   }, [token, currentMap]);
-
- 
 
   const toUnderscoreLowercase = (str) =>
     str?.toLowerCase().replace(/\s+/g, "_");
@@ -1127,6 +1129,12 @@ const MapboxExample = ({ data }) => {
     requestAnimationFrame(step);
   }
 
+  const openSidebarNasional = () => {
+    setSidebar_content(true);
+    // setProvinceSelect(statistik.find((o) => o.provinsi === "NASIONAL") || {});
+    setProvinceSelect({});
+  };
+
   return (
     <div className="relative overflow-hidden">
       <div className="relative portals-openlayer h-screen w-screen">
@@ -1134,9 +1142,9 @@ const MapboxExample = ({ data }) => {
         <div
           className="absolute text-white flex justify-end"
           style={{
-            zIndex: "999",
+            zIndex: "9",
             top: "22%",
-            right: "0px",
+            right: "5px",
             width: "450px",
             height: "450px",
             borderTopLeftRadius: "25px",
@@ -1223,7 +1231,41 @@ const MapboxExample = ({ data }) => {
             </div>
           </div>
         </div>
+        {/* Sidebar Left (Statistik)*/}
+        {!sidebar_content && (
+          <div
+            className="absolute text-white flex justify-end"
+            style={{
+              zIndex: "9",
+              top: "30%",
+              left: "0px",
+              height: "450px",
+              borderTopLeftRadius: "25px",
+              borderBottomLeftRadius: "25px",
+            }}
+          >
+            {/*Menu */}
+            <div className="flex flex-col relative">
+              <div className="flex flex-col absolute rounded-xl transition-all duration-300 ease-in-out w-[25px] h-[100px] bg-black/50 top-0 left-2">
+                <div
+                  onClick={openSidebarNasional}
+                  className="flex justify-between items-center h-full px-1"
+                >
+                  <Tooltip title="Produksi Nasional" placement="right">
+                    <MdKeyboardDoubleArrowRight />
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      <SidebarContent
+        sidebar_content={sidebar_content}
+        setSidebar_content={setSidebar_content}
+        dataProvince={dataProvince}
+      />
     </div>
   );
 };
