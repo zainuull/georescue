@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import MapboxMap from './MapboxMap';
+import Mapbox from './Mapbox';
 
 function PopUp(props) {
   const { lat, lng, handleClose, setLat, setLng, setShow } = props;
@@ -46,6 +47,7 @@ function PopUp(props) {
       )}
       <div className="relative">
         <MapboxMap lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
+        {/* <Mapbox lat={lat} lng={lng} setLat={setLat} setLng={setLng} /> */}
       </div>
     </div>
   );

@@ -26,6 +26,8 @@ export default async function Home() {
     console.error("Gagal ambil data:", error);
   }
 
+
+
   return (
     <div>
       <Map3D data={data} />

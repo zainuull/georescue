@@ -1,64 +1,70 @@
-import { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Marker, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { useState, useEffect } from "react";
 
-const MapComponent = ({ setLat, setLng }) => {
-  const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState(null);
+const containerStyle = {
+  width: "100%",
+  height: "400px",
+};
 
-  // Indonesia bounding box
-  const indonesiaBounds = {
-    north: 12.0, // North bound (top of Indonesia)
-    south: -14.0, // South bound (bottom of Indonesia)
-    east: 142.0, // East bound (right of Indonesia)
-    west: 94.0, // West bound (left of Indonesia)
-  };
+const indonesiaBounds = {
+  north: 12.0,
+  south: -14.0,
+  east: 142.0,
+  west: 94.0,
+};
+
+const MapComponent = ({ lat, lng, setLat, setLng }) => {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  });
+
+  const [markerPos, setMarkerPos] = useState({ lat, lng });
+
+  // 🔄 Sync markerPos when props.lat/lng change
+  useEffect(() => {
+    if (lat && lng) {
+      setMarkerPos({ lat, lng });
+    }
+  }, [lat, lng]);
 
   const handleMapClick = (e) => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
+    const clickedLat = e.latLng.lat();
+    const clickedLng = e.latLng.lng();
 
-    // Validasi koordinat (pastikan tetap dalam maxBounds)
-    const maxBounds = indonesiaBounds;
+    const boundedLat = Math.max(
+      indonesiaBounds.south,
+      Math.min(indonesiaBounds.north, clickedLat)
+    );
+    const boundedLng = Math.max(
+      indonesiaBounds.west,
+      Math.min(indonesiaBounds.east, clickedLng)
+    );
 
-    // Pastikan koordinat berada di dalam batas
-    const boundedLat = Math.max(maxBounds.south, Math.min(maxBounds.north, lat));
-    const boundedLng = Math.max(maxBounds.west, Math.min(maxBounds.east, lng));
-
-    // Update lat/lng state
     setLat(boundedLat);
     setLng(boundedLng);
-
-    // If there's an existing marker, update its position
-    if (marker) {
-      marker.setPosition({ lat: boundedLat, lng: boundedLng });
-    } else {
-      const newMarker = new window.google.maps.Marker({
-        position: { lat: boundedLat, lng: boundedLng },
-        map,
-      });
-      setMarker(newMarker);
-    }
+    setMarkerPos({ lat: boundedLat, lng: boundedLng });
   };
 
+  if (loadError) return <div>Gagal memuat peta</div>;
+  if (!isLoaded) return <div>Loading...</div>;
+
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
-      <GoogleMap
-        mapContainerStyle={{ width: '100%', height: '400px' }}
-        center={{ lat: -0.7893, lng: 113.9213 }} // Center map on Indonesia
-        zoom={3}
-        onClick={handleMapClick}
-        onLoad={(map) => {
-          setMap(map);
-          map.setOptions({
-            restriction: {
-              latLngBounds: indonesiaBounds, // Apply the bounding box restriction
-              strictBounds: false, // Allow panning inside the bounds
-            },
-          });
-        }}>
-        {marker && <Marker position={marker.getPosition()} />}
-      </GoogleMap>
-    </LoadScript>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={markerPos || { lat: -0.7893, lng: 113.9213 }}
+      zoom={5}
+      onClick={handleMapClick}
+      onLoad={(map) => {
+        map.setOptions({
+          restriction: {
+            latLngBounds: indonesiaBounds,
+            strictBounds: false,
+          },
+        });
+      }}
+    >
+      {markerPos && <Marker position={markerPos} />}
+    </GoogleMap>
   );
 };
 

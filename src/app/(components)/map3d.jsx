@@ -3,10 +3,8 @@ import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { Tooltip } from "@mui/material";
 import "./style.css";
-import { hospitalList, initialMapSourcesMapbox } from "./data/mapSourcesMapbox";
-import MapAccordion from "./mapAccordion";
+import { initialMapSourcesMapbox } from "./data/mapSourcesMapbox";
 import { BiWorld, BiZoomIn, BiZoomOut } from "react-icons/bi";
-import { FaRegMap } from "react-icons/fa";
 import { dataPopup } from "./data/dataPopup";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -53,7 +51,7 @@ const MapboxExample = ({ data }) => {
   let hospitalMarkerRefs = [];
   const [sidebar_content, setSidebar_content] = useState(false);
   const [dataProvince, setProvinceSelect] = useState(null);
-
+  const [dataSelect, setDataSelect] = useState(null);
   // console.log("hospitals", hospitals);
 
   // Init Map dan layer bangunan
@@ -583,6 +581,8 @@ const MapboxExample = ({ data }) => {
 
     const map = mapRef.current;
 
+    setProvinceSelect(data);
+
     const geoJsonData = {
       type: "FeatureCollection",
       features: data.map((item) => ({
@@ -597,6 +597,8 @@ const MapboxExample = ({ data }) => {
           imageUrl: item.imageUrl,
           latitude: item.koordinat.lat,
           longitude: item.koordinat.lng,
+          jenis_kecelakaan: item.jenis_kecelakaan,
+          ...item.lokasi,
         },
       })),
     };
@@ -700,7 +702,12 @@ const MapboxExample = ({ data }) => {
         const feature = features[0]; // Mengambil fitur pertama yang ditemukan
         const properties = feature.properties;
 
-        console.log("properties:", properties);
+        setProvinceSelect(
+          data.filter((o) => o.lokasi?.provinsi === properties.provinsi) || data
+        );
+
+        setDataSelect(properties);
+
         showPopupWithContent(e.originalEvent, "Provinsi_Indonesia", properties);
         await fetchIsochrone(properties);
       } else {
@@ -1131,9 +1138,9 @@ const MapboxExample = ({ data }) => {
 
   const openSidebarNasional = () => {
     setSidebar_content(true);
-    // setProvinceSelect(statistik.find((o) => o.provinsi === "NASIONAL") || {});
-    setProvinceSelect({});
   };
+
+  console.log("dataProvince:", dataProvince);
 
   return (
     <div className="relative overflow-hidden">
@@ -1264,7 +1271,8 @@ const MapboxExample = ({ data }) => {
       <SidebarContent
         sidebar_content={sidebar_content}
         setSidebar_content={setSidebar_content}
-        dataProvince={dataProvince}
+        data={dataProvince}
+        dataSelect={dataSelect }
       />
     </div>
   );
