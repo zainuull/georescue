@@ -11,7 +11,6 @@ import { geoJsonKab, geoJsonProvince } from "./data/geo_json";
 import { formatNumber } from "@/core/services/convert";
 import { ToastifyService } from "@/core/services/Toastify/toastifyService";
 
-
 const hoverStyle = new Style({
   fill: new Fill({ color: "rgba(29, 78, 216, 0.6)" }), // lebih tebal
   stroke: new Stroke({ color: "#1d4ed8", width: 3 }), // lebih tebal
@@ -90,15 +89,9 @@ const colors = [
   "#1E5F9C",
 ];
 
-function CityMap({
-  namaProvinsi,
-  dataSebaran,
-  selected,
-  setSelectMap,
-}) {
+function CityMap({ namaProvinsi, dataSebaran, setSelectMap }) {
   const mapRef = useRef();
   const mapInstanceRef = useRef(null);
-  const popupRef = useRef(null);
   const currentFeatureRef = useRef(null);
   const hoveredFeatureRef = useRef(null);
   const originalStyleRef = useRef(null);
@@ -151,7 +144,7 @@ function CityMap({
   //       popupElement.parentNode.removeChild(popupElement);
   //     }
   //   };
-  // }, []); 
+  // }, []);
 
   useEffect(() => {
     if (!mapInstanceRef.current) {
@@ -161,9 +154,9 @@ function CityMap({
         controls: [], // Hapus semua kontrol (termasuk zoom)
         view: new View({
           center: fromLonLat([117.5467, -2.8251]),
-          zoom: 8,
-          minZoom: 8, // Mengatur batas zoom minimum
-          maxZoom: 8, // Mengatur batas zoom maksimum
+          zoom: 7.5,
+          minZoom: 7.5, // Mengatur batas zoom minimum
+          maxZoom: 7.5, // Mengatur batas zoom maksimum
         }),
       });
     }
@@ -227,9 +220,7 @@ function CityMap({
 
         const filteredFeatures = features.filter((feature) => {
           const properties = feature.getProperties();
-          const provinsiName = namaProvinsi
-            ?.replace(/%20/g, " ")
-            .toLowerCase();
+          const provinsiName = namaProvinsi?.replace(/%20/g, " ").toLowerCase();
           return provinsiName === properties?.WADMPR?.toLowerCase();
         });
 
@@ -275,14 +266,7 @@ function CityMap({
                   const properties = feature.getProperties();
                   const namaWilayah =
                     properties?.WADMKK || properties?.WADMKC || "N/A";
-                  const isKabupaten = properties?.TIPADM === 4;
-
-                  const namaLengkap =
-                    namaWilayah !== "N/A"
-                      ? isKabupaten
-                        ? `KABUPATEN ${namaWilayah.toUpperCase()}`
-                        : namaWilayah.toUpperCase()
-                      : "N/A";
+                  const namaLengkap = namaWilayah.toUpperCase();
 
                   const districtData = getDistrictData(namaLengkap);
                   feature.setStyle(
@@ -347,13 +331,7 @@ function CityMap({
 
     const properties = feature.getProperties();
     const namaWilayah = properties?.WADMKK || properties?.WADMKC || "N/A";
-    const isKabupaten = properties?.TIPADM === 4;
-    const namaLengkap =
-      namaWilayah !== "N/A"
-        ? isKabupaten
-          ? `KABUPATEN ${namaWilayah.toUpperCase()}`
-          : namaWilayah.toUpperCase()
-        : "N/A";
+    const namaLengkap = namaWilayah.toUpperCase();
 
     const findSebaran = dataSebaran?.find((item) => {
       const itemName = (
@@ -464,14 +442,7 @@ function CityMap({
 
         const properties = feature.getProperties();
         const namaWilayah = properties?.WADMKK || properties?.WADMKC || "N/A";
-        const isKabupaten = properties?.TIPADM === 4;
-
-        const namaLengkap =
-          namaWilayah !== "N/A"
-            ? isKabupaten
-              ? `KABUPATEN ${namaWilayah.toUpperCase()}`
-              : namaWilayah.toUpperCase()
-            : "N/A";
+        const namaLengkap = namaWilayah.toUpperCase();
 
         setSelectMap({ ...properties, namaLengkap });
 
@@ -518,40 +489,46 @@ function CityMap({
   );
 
   return (
-    <div className="relative flex flex-col items-center"      style={{
-          width: "100%",
-          height: "500px",
-        }}>
-      <div className="relative"
+    <div
+      className="relative flex flex-col items-center"
+      style={{
+        width: "100%",
+        height: "500px",
+      }}
+    >
+      <div
+        className="relative"
         style={{
           width: "80%",
           height: "100%",
-        }}>
-      <div
-        ref={mapRef}
-        className="map-container"
-        style={{
-          width: "100%",
-          height: "100%",
         }}
-      />
-      <div
-        ref={hoverPopupRef}
-        className="ol-popup hover-popup"
-        style={{ position: "absolute", display: "none" }}
-      />
-      <div
-        ref={clickPopupRef}
-        className="ol-popup click-popup"
-        style={{ position: "absolute", display: "none" }}
-      />
-
+      >
+        <div
+          ref={mapRef}
+          className="map-container"
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        />
+        <div
+          ref={hoverPopupRef}
+          className="ol-popup hover-popup"
+          style={{ position: "absolute", display: "none" }}
+        />
+        <div
+          ref={clickPopupRef}
+          className="ol-popup click-popup"
+          style={{ position: "absolute", display: "none" }}
+        />
       </div>
-      
-   {legend?.length &&  <div className="absolute top-2 right-4 bg-black/40 text-white p-2">
-        {LegendMarker()}
-      </div>}
-</div>
+
+      {legend?.length && (
+        <div className="absolute top-2 right-4 bg-black/40 text-white p-2">
+          {LegendMarker()}
+        </div>
+      )}
+    </div>
   );
 }
 

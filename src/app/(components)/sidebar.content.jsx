@@ -58,9 +58,7 @@ const SidebarContent = ({
   };
 
   const result = transformProvince(data, dataSelect?.provinsi || "Indonesia");
-
-  console.log("result", result);
-
+console.log("result", result);
   //Sidebar Portal
   const sidebarPortal = useMemo(() => {
     const _temp = [
@@ -224,7 +222,12 @@ const SidebarContent = ({
 
       {/* CONTENT STATISTIK */}
       {selectData && (
-        <StatistikContent data={selectData} setSelectData={setSelectData} />
+        <StatistikContent
+          data={data}
+          selectData={selectData}
+          setSelectData={setSelectData}
+          result={ result}
+        />
       )}
     </aside>
   );

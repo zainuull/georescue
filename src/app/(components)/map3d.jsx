@@ -15,6 +15,9 @@ import { point } from "@turf/helpers";
 import distance from "@turf/distance";
 import SidebarContent from "./sidebar.content";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import dayjs from "dayjs";
+import "dayjs/locale/id"; // Untuk format lokal Indonesia
+dayjs.locale("id");
 
 const token = process.env.NEXT_PUBLIC_TOKEN_MAPBOX || "";
 const indonesiaCoordinates = [117.54672551458364, -2.8251446211285893];
@@ -598,6 +601,7 @@ const MapboxExample = ({ data }) => {
           latitude: item.koordinat.lat,
           longitude: item.koordinat.lng,
           jenis_kecelakaan: item.jenis_kecelakaan,
+          created_at: item.created_at,
           ...item.lokasi,
         },
       })),
@@ -720,6 +724,10 @@ const MapboxExample = ({ data }) => {
 
   const generatePopupContent = (id, result) => {
     let content = "";
+    // const formattedResult = result.map((item) => ({
+    //   ...item,
+    //   created_at: dayjs(item.created_at).format("DD MMMM YYYY HH:mm"),
+    // }));
 
     if (result) {
       for (const [pattern, templateFn] of Object.entries(dataPopup)) {
@@ -1140,8 +1148,6 @@ const MapboxExample = ({ data }) => {
     setSidebar_content(true);
   };
 
-  console.log("dataProvince:", dataProvince);
-
   return (
     <div className="relative overflow-hidden">
       <div className="relative portals-openlayer h-screen w-screen">
@@ -1272,7 +1278,7 @@ const MapboxExample = ({ data }) => {
         sidebar_content={sidebar_content}
         setSidebar_content={setSidebar_content}
         data={dataProvince}
-        dataSelect={dataSelect }
+        dataSelect={dataSelect}
       />
     </div>
   );

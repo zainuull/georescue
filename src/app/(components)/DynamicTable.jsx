@@ -1,8 +1,9 @@
 import { useState } from "react";
 import TableList from "./TableList";
 import Title from "./Title";
-
-
+import dayjs from "dayjs";
+import "dayjs/locale/id"; // Untuk format lokal Indonesia
+dayjs.locale("id");
 
 const DynamicTableDB = ({
   label,
@@ -18,18 +19,44 @@ const DynamicTableDB = ({
   });
 
   const DBUsageCol = [
-    { id: "waktu", label: "Waktu" },
-    { id: "jenis_kecelakaan", label: "Jenis Kecelakaan" },
-    { id: "nama_korban", label: "Nama Korban" },
-    { id: "nama_kelurahan", label: "Kelurahan / Desa" },
     {
-      id: "lat", label: "Koordinat", cell: (row) => {
+      id: "created_at",
+      label: "Waktu",
+      cell: (row) => {
         return (
-          <p>Lat:{row.lat} Long:{ row.lng}</p>
-      )
-    } },
+          <p className="capitalize">
+            {dayjs(row.created_at).format("DD MMMM YYYY HH:mm")}
+          </p>
+        );
+      },
+    },
+    {
+      id: "jenis_kecelakaan",
+      label: "Jenis Kecelakaan",
+      cell: (row) => {
+        return <p className="capitalize">{row.jenis_kecelakaan}</p>;
+      },
+    },
+    { id: "nama", label: "Nama Korban" },
+    {
+      id: "nama_kelurahan",
+      label: "Kelurahan / Desa",
+      cell: (row) => {
+        return <p className="capitalize">{row.lokasi?.kecamatan}</p>;
+      },
+    },
+    {
+      id: "lat",
+      label: "Koordinat",
+      cell: (row) => {
+        return (
+          <p>
+            Lat:{row.koordinat?.lat} Long:{row.koordinat?.lng}
+          </p>
+        );
+      },
+    },
   ];
-
 
   const columnsConfig = {
     db_usage: DBUsageCol,
@@ -43,8 +70,8 @@ const DynamicTableDB = ({
       style={{ minHeight: height }}
     >
       <div className="px-4">
-          <Title title={title} color={'orange'} />
-    </div>
+        <Title title={title} color={"orange"} />
+      </div>
       <TableList
         query={query}
         setQuery={setQuery}

@@ -70,9 +70,10 @@ export const dataPopup = {
   // ADMINISTRASI WILAYAH
   Provinsi_Indonesia: (result) =>
     generateDynamicTable(result, [
-      { label: 'Nama', key: 'nama' },
-      { label: 'Latitude', key: 'latitude' },
-      { label: 'Longitude', key: 'longitude' },
-      { label: 'Gambar', key: 'imageUrl' },
+      // { label: "Waktu", key: "created_at" },
+      { label: "Nama", key: "nama" },
+      { label: "Latitude", key: "latitude" },
+      { label: "Longitude", key: "longitude" },
+      { label: "Gambar", key: "imageUrl" },
     ]),
 };
