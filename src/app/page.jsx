@@ -1,11 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import ToastNotify from "@/core/services/notify/toast";
 import axios from "axios";
 
-// Komponen hanya dirender di client
+// Map3D tetap di-load di client jika butuh akses window/document
 const Map3D = dynamic(() => import("./(components)/map3d"), { ssr: false });
 
 const headers = {
@@ -15,24 +12,21 @@ const headers = {
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
-  headers,
+  headers: headers,
 });
 
-export default function Home() {
-  const [data, setData] = useState([]);
+// Ini adalah SERVER COMPONENT karena tidak pakai 'use client'
+export default async function Home() {
+  let data = [];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await instance.get("/api/location");
-        setData(response.data?.data || []);
-      } catch (error) {
-        console.error("Gagal ambil data:", error);
-      }
-    };
+  try {
+    const response = await instance.get("/api/location");
+    data = response.data?.data || [];
+  } catch (error) {
+    console.error("Gagal ambil data:", error);
+  }
 
-    fetchData();
-  }, []);
+
 
   return (
     <div>
