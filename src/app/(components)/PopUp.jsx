@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import MapboxMap from './MapboxMap';
-import Mapbox from './Mapbox';
+import React, { useEffect } from "react";
+import MapboxMap from "./MapboxMap";
 
 function PopUp(props) {
   const { lat, lng, handleClose, setLat, setLng, setShow } = props;
@@ -16,23 +15,27 @@ function PopUp(props) {
           setShow(true); // Show the map popup
         },
         (error) => {
-          alert('Gagal mendapatkan lokasi. Pastikan Anda mengizinkan geolokasi.');
-          console.error('Error retrieving location:', error);
+          alert(
+            "Gagal mendapatkan lokasi. Pastikan Anda mengizinkan geolokasi."
+          );
+          console.error("Error retrieving location:", error);
         }
       );
     } else {
-      alert('Geolocation tidak didukung oleh browser Anda.');
+      alert("Geolocation tidak didukung oleh browser Anda.");
     }
   }, []);
 
   return (
     <div
       className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4 w-100"
-      style={{ width: '50%', zIndex: '999' }}>
+      style={{ width: "50%", zIndex: "999" }}
+    >
       <div className="flex justify-between w-100 mb-4">
         <button
           onClick={handleClose}
-          className="mt-3 py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600">
+          className="mt-3 py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600"
+        >
           Tutup
         </button>
       </div>
@@ -47,7 +50,6 @@ function PopUp(props) {
       )}
       <div className="relative">
         <MapboxMap lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
-        {/* <Mapbox lat={lat} lng={lng} setLat={setLat} setLng={setLng} /> */}
       </div>
     </div>
   );
