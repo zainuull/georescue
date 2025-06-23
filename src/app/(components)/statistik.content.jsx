@@ -6,7 +6,9 @@ import {
   capitalizeTheFirstLetterOfEachWord,
 } from "../../core/services/convert";
 import Divider from "@mui/material/Divider";
-
+import StatistikPieChart from "./StatistikPieChart";
+import StatistikLineChart from "./StatistikLineChart";
+import dayjs from "dayjs";
 
 const StatistikContent = ({ data, selectData, setSelectData, result }) => {
   const [selectMap, setSelectMap] = useState(null);
@@ -37,7 +39,37 @@ const StatistikContent = ({ data, selectData, setSelectData, result }) => {
     );
   }, [data, selectMap?.KDPKAB]);
 
-  
+  console.log("selectMap", selectMap);
+
+  const countPerLocation = {};
+
+  resultDataDetail.forEach((item) => {
+    const key = item.lokasi.kecamatan || "Tidak Diketahui";
+    countPerLocation[key] = (countPerLocation[key] || 0) + 1;
+  });
+
+  const countPerMonth = {};
+
+  resultDataDetail.forEach((item) => {
+    const dateKey = dayjs(item.created_at).format("YYYY-MM-01");
+    countPerMonth[dateKey] = (countPerMonth[dateKey] || 0) + 1;
+  });
+
+  const list = {
+    top10Tujuan: {
+      labels: Object.keys(countPerLocation),
+      series: Object.values(countPerLocation),
+    },
+
+    order: [
+      {
+        name: "Total Kecelakaan",
+        data: Object.entries(countPerMonth).map(([x, y]) => ({ x, y })),
+      },
+    ],
+  };
+
+  const dummyCategories = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul"];
 
   return (
     <aside className={`w-3/4 p-2`}>
@@ -67,6 +99,35 @@ const StatistikContent = ({ data, selectData, setSelectData, result }) => {
             setSelectMap={setSelectMap}
           />
           <Divider sx={{ my: 4, borderColor: "rgba(255,255,255,0.2)" }} />
+          {selectMap?.NAMOBJ && (
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 md:col-span-6 rounded-lg shadow-md p-6 flex flex-col text-white">
+                <h2 className="font-semibold mb-4">
+                  Top 10 Kecelakaan Berdasarkan Kel/Desa
+                </h2>
+                <StatistikPieChart
+                  series={list.top10Tujuan.series}
+                  labels={list.top10Tujuan.labels.map((label) =>
+                    label.toUpperCase()
+                  )}
+                  width={300}
+                  type="Kecelakaan"
+                  colorLabel="#000"
+                />
+              </div>
+
+              <div className="col-span-12 md:col-span-6 rounded-lg shadow-md p-6 flex flex-col text-white">
+                <h2 className="font-semibold mb-4">
+                  Pertumbuhan Kecelakaan di Bekasi
+                </h2>
+                <StatistikLineChart
+                  series={list.order}
+                  categories={dummyCategories}
+                  width="100%"
+                />
+              </div>
+            </div>
+          )}
 
           <DynamicTableDB
             label={"db_usage"}

@@ -58,7 +58,7 @@ const SidebarContent = ({
   };
 
   const result = transformProvince(data, dataSelect?.provinsi || "Indonesia");
-console.log("result", result);
+
   //Sidebar Portal
   const sidebarPortal = useMemo(() => {
     const _temp = [
@@ -226,7 +226,7 @@ console.log("result", result);
           data={data}
           selectData={selectData}
           setSelectData={setSelectData}
-          result={ result}
+          result={result}
         />
       )}
     </aside>
