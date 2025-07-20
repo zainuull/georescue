@@ -20,13 +20,13 @@ export default async function Home() {
   let data = [];
 
   try {
-    const response = await instance.get("/api/location");
+    const response = await instance.get(
+      `/api/location?timestamp=${Date.now()}`
+    );
     data = response.data?.data || [];
   } catch (error) {
     console.error("Gagal ambil data:", error);
   }
-
-
 
   return (
     <div>

@@ -26,6 +26,7 @@
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "formik": "^2.4.6",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.13.0",
     "mongodb": "^6.9.0",
