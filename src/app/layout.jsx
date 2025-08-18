@@ -8,12 +8,15 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: 'Jual Beli Kucing | Tambun',
+  title: "Jual Beli Kucing | Tambun",
   // description: 'This created by Zainul',
   // authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app' }],
   // icons: {
   //   icon: '/logo.jpeg',
   // },
+  icons: {
+    icon: "/fb.png",
+  },
 };
 
 export default function RootLayout({ children }) {
