@@ -3,15 +3,6 @@ import { useEffect, useState } from "react";
 import EXIF from "exif-js"; // ✅ import exif-js
 import axios from "axios";
 
-const headers = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
-};
-
-const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
-  headers: headers,
-});
 
 const token = process.env.NEXT_PUBLIC_TOKEN_MAPBOX;
 
@@ -143,8 +134,8 @@ export default function App() {
       });
 
       const features = response.data.features;
-      console.log("features", features);
-      // Helper untuk mencari jenis tertentu
+
+        // Helper untuk mencari jenis tertentu
       const getTextByType = (type) =>
         features.find((f) => f.id.startsWith(type))?.text || "-";
 

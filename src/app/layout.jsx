@@ -8,12 +8,12 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: 'GeoRescue',
-  description: 'This created by Zainul',
-  authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app' }],
-  icons: {
-    icon: '/logo.jpeg',
-  },
+  title: 'Jual Beli Kucing | Tambun',
+  // description: 'This created by Zainul',
+  // authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app' }],
+  // icons: {
+  //   icon: '/logo.jpeg',
+  // },
 };
 
 export default function RootLayout({ children }) {
