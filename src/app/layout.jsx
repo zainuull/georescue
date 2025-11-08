@@ -1,21 +1,21 @@
-import { Poppins } from 'next/font/google';
-import './globals.css';
-import 'react-toastify/dist/ReactToastify.css';
+import { Poppins } from "next/font/google";
+import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata = {
-  title: "Jual Beli Kucing | Tambun",
-  // description: 'This created by Zainul',
-  // authors: [{ name: 'Bigboss Company' }, { url: 'https://georescue.vercel.app' }],
-  // icons: {
-  //   icon: '/logo.jpeg',
-  // },
+  title: "Georescue",
+  description: "This created by Zainul",
+  authors: [
+    { name: "Bigboss Company" },
+    { url: "https://georescue.vercel.app" },
+  ],
   icons: {
-    icon: "/fb.png",
+    icon: "/logo.jpeg",
   },
 };
 
